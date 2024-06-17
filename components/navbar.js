@@ -10,6 +10,7 @@ import Logo from "./logo";
 
 export default function Navbar(props) {
   const menuItems = [
+    { label: "Onboarding", href: "/workflow" },
     { label: "Inicio", href: "/" },
     { label: "Soluções", href: "/solutions" },
     { label: "Quem Somos", href: "/about" },

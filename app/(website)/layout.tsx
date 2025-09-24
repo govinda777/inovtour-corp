@@ -1,35 +1,57 @@
-import { Metadata } from 'next';
-import { getSettings } from "@/lib/sanity/client";
+import { Metadata } from "next";
 import Footer from "@/components/footer";
-import { urlForImage } from "@/lib/sanity/image";
 import Navbar from "@/components/navbar";
 import ConsentManager from "@/components/consentManager";  // Novo componente de cliente
 
+// Configurações padrão (substituem o Sanity)
+const defaultSettings = {
+  title: "INOVTOUR",
+  description:
+    "INOVTOUR cooperates with the best travel agencies in the world to provide you with the best travel experience.",
+  url: "https://default-url.com",
+  openGraphImage: "/img/opengraph.jpg",
+
+  // Props necessárias para Footer/Navbar
+  email: "contato@inovtour.com",
+  phone: "+55 (11) 99999-9999",
+  social: [
+    { media: "facebook", url: "https://facebook.com/inovtour" },
+    { media: "instagram", url: "https://instagram.com/inovtour" },
+    { media: "linkedin", url: "https://linkedin.com/company/inovtour" },
+  ],
+  copyright: "© 2025 INOVTOUR. Todos os direitos reservados.",
+  logo: { asset: { url: "/img/logo.png" } },
+  logoalt: "INOVTOUR LOGO",
+};
+
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await getSettings();
+  const settings = defaultSettings;
 
   return {
+    metadataBase: new URL(settings.url || "https://inovtour.com"),
     title: {
-      default: settings?.title || "INOVTOUR",
-      template: "%s | Stablo"
+      default: settings.title || "INOVTOUR",
+      template: "%s | Stablo",
     },
-    description: settings?.description || "INOVTOUR cooperates with the best travel agencies in the world to provide you with the best travel experience.",
+    description:
+      settings.description ||
+      "INOVTOUR cooperates with the best travel agencies in the world to provide you with the best travel experience.",
     keywords: ["travel", "tourism", "vacation", "trip"],
     authors: [{ name: "Govinda Systems DAO" }],
     alternates: {
-      canonical: settings?.url || "https://default-url.com",
+      canonical: settings.url || "https://default-url.com",
     },
     openGraph: {
       images: [
         {
-          url: urlForImage(settings?.openGraphImage)?.src || "/img/opengraph.jpg",
+          url: settings.openGraphImage || "/img/opengraph.jpg",
           width: 800,
           height: 600,
-        }
+        },
       ],
     },
     twitter: {
-      title: settings?.title || "INOVTOUR",
+      title: settings.title || "INOVTOUR",
       card: "summary_large_image",
     },
     robots: {
@@ -39,15 +61,24 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
-  const settingsPromise = getSettings();
-  const settings = await settingsPromise; 
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const settings = defaultSettings;
 
   return (
     <html lang="en">
       <head>
-        <title>{settings?.title || "INOVTOUR"}</title>
-        <meta name="description" content={settings?.description || "INOVTOUR cooperates with the best travel agencies in the world to provide you with the best travel experience."} />
+        <title>{settings.title || "INOVTOUR"}</title>
+        <meta
+          name="description"
+          content={
+            settings.description ||
+            "INOVTOUR cooperates with the best travel agencies in the world to provide you with the best travel experience."
+          }
+        />
       </head>
       <body>
         <div id="__next">

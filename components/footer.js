@@ -33,11 +33,11 @@ export default function Footer({
 
   // Find URLs for each social media
   const facebookURL =
-    social.find((socialItem) => socialItem.media === "facebook")?.url || "#";
+    social?.find((socialItem) => socialItem.media === "facebook")?.url || "#";
   const linkedinURL =
-    social.find((socialItem) => socialItem.media === "linkedin")?.url || "#";
+    social?.find((socialItem) => socialItem.media === "linkedin")?.url || "#";
   const instagramURL =
-    social.find((socialItem) => socialItem.media === "instagram")?.url || "#";
+    social?.find((socialItem) => socialItem.media === "instagram")?.url || "#";
 
   return (
     <div className="bg-dark2">

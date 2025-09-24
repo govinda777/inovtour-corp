@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cx } from "@/utils/all";
-import { urlForImage } from "@/lib/sanity/image";
 import { parseISO, format } from "date-fns";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import CategoryLabel from "@/components/blog/category";
@@ -13,25 +12,24 @@ export default function PostList({
   pathPrefix,
   preloadImage,
   fontSize,
-  fontWeight
+  fontWeight,
 }) {
-  const imageProps = post?.mainImage
-    ? urlForImage(post.mainImage)
-    : null;
-  const AuthorimageProps = post?.author?.image
-    ? urlForImage(post.author.image)
-    : null;
+  const imageUrl = post?.mainImage || null; // agora string direta
+  const AuthorimageProps = post?.author?.image || null; // também string direta
+
   return (
     <>
       <div
         className={cx(
           "group cursor-pointer",
           minimal && "grid gap-10 md:grid-cols-2"
-        )}>
+        )}
+      >
         <div
           className={cx(
-            " overflow-hidden rounded-md bg-gray-100 transition-all hover:scale-105   dark:bg-gray-800"
-          )}>
+            "overflow-hidden rounded-md bg-gray-100 transition-all hover:scale-105 dark:bg-gray-800"
+          )}
+        >
           <Link
             className={cx(
               "relative block",
@@ -43,16 +41,13 @@ export default function PostList({
             )}
             href={`/post/${pathPrefix ? `${pathPrefix}/` : ""}${
               post.slug.current
-            }`}>
-            {imageProps ? (
+            }`}
+          >
+            {imageUrl ? (
               <Image
-                src={imageProps.src}
-                {...(post.mainImage.blurDataURL && {
-                  placeholder: "blur",
-                  blurDataURL: post.mainImage.blurDataURL
-                })}
-                alt={post.mainImage.alt || "Thumbnail"}
-                priority={preloadImage ? true : false}
+                src={imageUrl}
+                alt={post.mainImage?.alt || "Thumbnail"}
+                priority={!!preloadImage}
                 className="object-cover transition-all"
                 fill
                 sizes="(max-width: 768px) 30vw, 33vw"
@@ -67,10 +62,7 @@ export default function PostList({
 
         <div className={cx(minimal && "flex items-center")}>
           <div>
-            <CategoryLabel
-              categories={post.categories}
-              nomargin={minimal}
-            />
+            <CategoryLabel categories={post.categories} nomargin={minimal} />
             <h2
               className={cx(
                 fontSize === "large"
@@ -79,22 +71,25 @@ export default function PostList({
                   ? "text-3xl"
                   : "text-lg",
                 fontWeight === "normal"
-                  ? "line-clamp-2 font-medium  tracking-normal text-black"
+                  ? "line-clamp-2 font-medium tracking-normal text-black"
                   : "font-semibold leading-snug tracking-tight",
-                "mt-2    dark:text-white"
-              )}>
+                "mt-2 dark:text-white"
+              )}
+            >
               <Link
                 href={`/post/${pathPrefix ? `${pathPrefix}/` : ""}${
                   post.slug.current
-                }`}>
+                }`}
+              >
                 <span
                   className="bg-gradient-to-r from-green-200 to-green-100 bg-[length:0px_10px] bg-left-bottom
-      bg-no-repeat
-      transition-[background-size]
-      duration-500
-      hover:bg-[length:100%_3px]
-      group-hover:bg-[length:100%_10px]
-      dark:from-purple-800 dark:to-purple-900">
+                    bg-no-repeat
+                    transition-[background-size]
+                    duration-500
+                    hover:bg-[length:100%_3px]
+                    group-hover:bg-[length:100%_10px]
+                    dark:from-purple-800 dark:to-purple-900"
+                >
                   {post.title}
                 </span>
               </Link>
@@ -104,9 +99,10 @@ export default function PostList({
               {post.excerpt && (
                 <p className="mt-2 line-clamp-3 text-sm text-gray-500 dark:text-gray-400">
                   <Link
-                    href={`/post/${
-                      pathPrefix ? `${pathPrefix}/` : ""
-                    }${post.slug.current}`}>
+                    href={`/post/${pathPrefix ? `${pathPrefix}/` : ""}${
+                      post.slug.current
+                    }`}
+                  >
                     {post.excerpt}
                   </Link>
                 </p>
@@ -117,9 +113,9 @@ export default function PostList({
               <Link href={`/author/${post?.author?.slug?.current}`}>
                 <div className="flex items-center gap-3">
                   <div className="relative h-5 w-5 flex-shrink-0">
-                    {post?.author?.image && (
+                    {authorImageUrl && (
                       <Image
-                        src={AuthorimageProps.src}
+                        src={authorImageUrl}
                         alt={post?.author?.name}
                         className="rounded-full object-cover"
                         fill
@@ -127,9 +123,7 @@ export default function PostList({
                       />
                     )}
                   </div>
-                  <span className="truncate text-sm">
-                    {post?.author?.name}
-                  </span>
+                  <span className="truncate text-sm">{post?.author?.name}</span>
                 </div>
               </Link>
               <span className="text-xs text-gray-300 dark:text-gray-600">
@@ -137,7 +131,8 @@ export default function PostList({
               </span>
               <time
                 className="truncate text-sm"
-                dateTime={post?.publishedAt || post._createdAt}>
+                dateTime={post?.publishedAt || post._createdAt}
+              >
                 {format(
                   parseISO(post?.publishedAt || post._createdAt),
                   "MMMM dd, yyyy"

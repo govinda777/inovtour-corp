@@ -3,20 +3,30 @@
 import Script from "next/script";
 import React, { useEffect } from "react";
 
-export default function FacebookPixel({ pixelId }: { pixelId: string }) {
+export default function FacebookPixel({
+  pixelId
+}: {
+  pixelId: string;
+}) {
   useEffect(() => {
     if (!window.fbq) {
-      window.fbq = function () {
-        window.fbq.callMethod
-          ? window.fbq.callMethod.apply(window.fbq, arguments)
-          : window.fbq.queue.push(arguments);
-      };
-      window.fbq.push = window.fbq;
-      window.fbq.loaded = true;
-      window.fbq.version = "2.0";
-      window.fbq.queue = [];
-      window.fbq('init', pixelId);
-      window.fbq('track', 'PageView');
+      const fbq: Window["fbq"] = function (...args: any[]) {
+        if (fbq.callMethod) {
+          fbq.callMethod(...args);
+        } else {
+          fbq.queue?.push(args);
+        }
+      } as any;
+
+      fbq.push = fbq;
+      fbq.loaded = true;
+      fbq.version = "2.0";
+      fbq.queue = [];
+
+      window.fbq = fbq;
+
+      window.fbq("init", pixelId);
+      window.fbq("track", "PageView");
     }
   }, [pixelId]);
 
@@ -25,9 +35,10 @@ export default function FacebookPixel({ pixelId }: { pixelId: string }) {
       <Script
         id="fb-pixel"
         strategy="afterInteractive"
-        src={`https://connect.facebook.net/en_US/fbevents.js`}
+        src="https://connect.facebook.net/en_US/fbevents.js"
       />
       <noscript>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           height="1"
           width="1"

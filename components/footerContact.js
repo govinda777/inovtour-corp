@@ -3,7 +3,7 @@
 import React from "react";
 
 const FooterContact = ({ phone, email }) => {
-  const whatsappURL = `https://wa.me/${phone.replace(/[^0-9]/g, "")}`;
+  const whatsappURL = `https://wa.me/${phone?.replace(/[^0-9]/g, "")}`;
 
   return (
     <div className="flex flex-col gap-3">

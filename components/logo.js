@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Disclosure } from "@headlessui/react";
 import Image from "next/image";
-import { urlForImage } from "@/lib/sanity/image";
 
 const Logo = ({ 
   logo, 
@@ -17,7 +16,7 @@ const Logo = ({
       <Link href="/" className={`${containerClass} dark:hidden`}>
         {logo ? (
           <Image
-            {...urlForImage(logo)}
+            src={logo} 
             alt="Logo"
             priority={true}
             width={width}
@@ -32,7 +31,7 @@ const Logo = ({
       <Link href="/" className={`hidden ${containerClass} dark:block`}>
         {logoalt ? (
           <Image
-            {...urlForImage(logoalt)}
+            src={logoalt} 
             alt="Logo"
             priority={true}
             width={width}
@@ -46,8 +45,13 @@ const Logo = ({
       </Link>
       <Disclosure.Button
         aria-label="Toggle Menu"
-        className="ml-auto rounded-md px-2 py-1 text-gray-500 focus:text-blue-500 focus:outline-none dark:text-gray-300 md:hidden">
-        <svg className="h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        className="ml-auto rounded-md px-2 py-1 text-gray-500 focus:text-blue-500 focus:outline-none dark:text-gray-300 md:hidden"
+      >
+        <svg
+          className="h-6 w-6 fill-current"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
           {open ? (
             <path
               fillRule="evenodd"

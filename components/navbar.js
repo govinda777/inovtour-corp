@@ -6,7 +6,8 @@ import Container from "@/components/container";
 import Link from "next/link";
 import cx from "clsx";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import Logo from "./logo";
+import Logo from "../public/img/logo.png";
+import Image from "next/image";
 
 export default function Navbar(props) {
   const menuItems = [
@@ -38,7 +39,13 @@ export default function Navbar(props) {
           {({ open }) => (
             <>
               <div style={navStyles.fixedContainer}>
-                <Logo logo={props.logo} logoalt={props.logoalt} open={open} />
+                 <Image
+                  src={Logo}
+                  alt={"LOGO INOVTOUR"}
+                  width="100"
+                  height="20"
+                  className=""
+                />
                 <div className="order-1 hidden w-full flex-col items-center justify-start md:order-none md:flex md:w-auto md:flex-1 md:flex-row md:justify-center">
                   {menuItems.map((item, index) => (
                     <Fragment key={`${item.label}${index}`}>

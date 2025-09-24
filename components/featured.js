@@ -1,17 +1,17 @@
 import Image from "next/image";
-import { urlForImage } from "@/lib/sanity/image";
 import { parseISO, format } from "date-fns";
 import { cx } from "@/utils/all";
 import Link from "next/link";
 
 export default function Featured({ post, pathPrefix }) {
   const imageProps = post?.mainImage
-    ? urlForImage(post?.mainImage)
+    ? { src: post.mainImage.url }
     : null;
 
   const AuthorimageProps = post?.author?.image
-    ? urlForImage(post.author.image)
+    ? { src: post.author.image.url }
     : null;
+
   return (
     <div
       className={cx(

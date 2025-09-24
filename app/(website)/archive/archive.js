@@ -1,48 +1,54 @@
 import PostList from "@/components/postlist";
 import Pagination from "@/components/blog/pagination";
 
-import { getPaginatedPosts } from "@/lib/sanity/client";
+// Simulação de posts locais (substitui o Sanity)
+const allPosts = [
+  {
+    _id: "1",
+    title: "Primeiro Post",
+    slug: { current: "primeiro-post" },
+    mainImage: { url: "/img/post1.jpg", alt: "Post 1" },
+    author: { name: "Autor 1", image: { url: "/img/author1.jpg" } },
+    publishedAt: "2025-01-01",
+    categories: [{ title: "Viagem", slug: { current: "viagem" } }],
+  },
+  {
+    _id: "2",
+    title: "Segundo Post",
+    slug: { current: "segundo-post" },
+    mainImage: { url: "/img/post2.jpg", alt: "Post 2" },
+    author: { name: "Autor 2", image: { url: "/img/author2.jpg" } },
+    publishedAt: "2025-01-05",
+    categories: [{ title: "Turismo", slug: { current: "turismo" } }],
+  },
+];
 
 export default async function Post({ searchParams }) {
-  // Fetch the current page from the query parameters, defaulting to 1 if it doesn't exist
-  const page = searchParams.page;
-  const pageIndex = parseInt(page, 10) || 1;
+  const page = searchParams?.page;
+  const pageIndex = parseInt(page || "1", 10) || 1;
 
-  // Set the number of posts to be displayed per page
   const POSTS_PER_PAGE = 6;
+  const startIndex = (pageIndex - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const posts = allPosts.slice(startIndex, endIndex);
 
-  // Define the parameters for fetching posts based on the current page
-  const params = {
-    pageIndex: (pageIndex - 1) * POSTS_PER_PAGE,
-    limit: pageIndex * POSTS_PER_PAGE
-  };
-
-  const posts = await getPaginatedPosts(params);
-
-  // Check if the current page is the first or the last
   const isFirstPage = pageIndex < 2;
-  const isLastPage = posts.length < POSTS_PER_PAGE;
+  const isLastPage = endIndex >= allPosts.length;
 
   return (
     <>
-      {posts && posts?.length === 0 && (
+      {posts.length === 0 && (
         <div className="flex h-40 items-center justify-center">
-          <span className="text-lg text-gray-500">
-            End of the result!
-          </span>
+          <span className="text-lg text-gray-500">End of the result!</span>
         </div>
       )}
       <div className="mt-10 grid gap-10 md:grid-cols-2 lg:gap-10 xl:grid-cols-3">
-        {posts.map(post => (
+        {posts.map((post) => (
           <PostList key={post._id} post={post} aspect="square" />
         ))}
       </div>
 
-      <Pagination
-        pageIndex={pageIndex}
-        isFirstPage={isFirstPage}
-        isLastPage={isLastPage}
-      />
+      <Pagination pageIndex={pageIndex} isFirstPage={isFirstPage} isLastPage={isLastPage} />
     </>
   );
 }
